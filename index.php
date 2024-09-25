@@ -30,10 +30,10 @@
 ?>
 
 <script type="module">
-    import { UserSettings } from "./js/class/UserSettings.js"
+    import { SettingsManager } from "./js/manager/SettingsManager.js"
+    import { Settings } from "./js/class/Settings.js"
+    import { App } from "./js/class/App.js"
 
-    var a = new UserSettings();
-
-    a.setDefaultLocalSettings();
+    const app = new App(new SettingsManager());
 </script>
 
