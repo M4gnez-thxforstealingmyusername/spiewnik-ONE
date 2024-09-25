@@ -1,15 +1,27 @@
 import { Settings } from "../class/Settings.js";
+import { CookieService } from "../service/CookieService.js";
+import { SettingsService } from "../service/SettingsService.js";
 
 export class SettingsManager{
 
     #settings;
 
     constructor() {
-        this.getLocalSettings();
+        this.getRemoteSettings().then(() => {this.apply()});
     }
 
-    getRemoteSettings() {
-        //check database for changes in settings
+    async getRemoteSettings() {
+        await new SettingsService().get().then(data => {
+            if(JSON.parse(data))
+                this.#settings = new Settings(JSON.parse(data));
+        })
+
+        if(this.#settings)
+            console.info("info:\n\tremote settings loaded");
+        else {
+            console.info("info:\n\tremote settings not found");
+            this.getLocalSettings();
+        }
     }
 
     setRemoteSettings() {
@@ -17,33 +29,41 @@ export class SettingsManager{
     }
 
     apply() {
-        //apply settings
+        this.setTheme(this.#settings.getTheme())
     }
 
-    getLocalSettings() {
-        if(document.cookie.includes("settings"))
-            console.log(JSON.stringify(Settings.getDefault()));
-        else
-            console.log("settings missing");
-        return 1;
+    async getLocalSettings() {
+        if(this.#settings)
+            return;
+
+        if(document.cookie.includes("settings")) {
+            this.#settings = new Settings(JSON.parse(new CookieService("settings").get()));
+            console.info("info:\n\tlocal settings loaded");
+        }
+        else {
+            console.info("info:\n\tlocal settings not found");
+            this.setDefaultLocalSettings();
+        }
     }
 
     setDefaultLocalSettings() {
-        document.cookie = 'settings;expires=Thu, 01 Jan 1970 00:00:01 GMT"'
+        console.info("info:\n\tno settings found, initializing default settings");
+
+        document.cookie = "settings=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         const expirationDate = new Date();
         expirationDate.setTime(expirationDate.getTime() + (30*24*60*60*1000));
-        document.cookie = `settings=${JSON.stringify(Settings.getDefault())};expires=${expirationDate.toUTCString()};path=/`;
+        document.cookie = `settings=${Settings.getDefault().serialize()};expires=${expirationDate.toUTCString()};path=/`;
     }
 
     setTheme(theme) {
         let themeSheet = document.getElementById("themeSheet");
 
-        if(/.*Theme\.css/.test(theme)){
-            themeSheet.setAttribute("href", `${theme}Theme.css`);
-            console.log(`Theme set to: "${theme}"`);
+        //TODO: create theme list and check if present
+        if(true){
+            themeSheet.setAttribute("href", `${theme}.css`);
+            console.info(`info:\n\ttheme set to: "${theme}"`);
         }
         else
-            console.warn(`Warning:\n\tinvalid theme file format:\n\t  "${theme}",\n\texpected:\n\t  "...Theme.css"`)
+            console.warn(`warning:\n\ttheme not found`)
     }
-
 }

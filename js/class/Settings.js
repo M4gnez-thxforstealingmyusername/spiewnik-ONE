@@ -6,13 +6,13 @@ export class Settings{
     #nextSlide;
     #reset;
 
-    static #DEFAULT = new Settings(16, "defaultDark", null, "left", "r");
+    static #DEFAULT = new Settings({fontSize: 16, Theme: "defaultDark", customColor: null, nextSlide: "left", reset: "r"});
 
     static getDefault() {
         return this.#DEFAULT;
     }
 
-    constructor(fontSize, theme, customColor, nextSlide, reset) {
+    constructor({fontSize, theme, customColor, nextSlide, reset}) {
         this.#fontSize = fontSize;
         this.#theme = theme;
         this.#customColor = customColor;
@@ -56,7 +56,7 @@ export class Settings{
         this.#customColor = value;
     }
 
-    setReset(value) {
+    setNextSlide(value) {
         this.#nextSlide = value;
     }
 
@@ -64,4 +64,7 @@ export class Settings{
         this.#reset = value;
     }
 
+    serialize() {
+        return JSON.stringify({fontSize: this.#fontSize, theme: this.#theme, customColor: this.#customColor, nextSlide: this.#nextSlide, reset: this.#reset})
+    }
 }

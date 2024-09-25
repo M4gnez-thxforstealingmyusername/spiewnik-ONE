@@ -1,7 +1,4 @@
-<link id="themeSheet" rel="stylesheet" href="lightTheme.css">
-<link rel="stylesheet" href="style.css">
 <?php
-
     function router() {
         $uri = substr($_SERVER["REQUEST_URI"], 9);
 
@@ -9,11 +6,12 @@
             case "":
             case "/":
                 include("./home.php");
-            break;
+                break;
+
             case "/piesni":
             case "/piesni/":
                 include("./songs.php");
-            break;
+                break;
 
             default:
                 include("404.php");
@@ -21,6 +19,7 @@
     }
 
     function runApp() {
+        include "./imports.html";
         include "./navBar.php";
         router();
     }
