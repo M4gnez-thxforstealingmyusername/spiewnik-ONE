@@ -6,7 +6,7 @@ export class Settings{
     #nextSlide;
     #reset;
 
-    static #DEFAULT = new Settings({fontSize: 16, Theme: "defaultDark", customColor: null, nextSlide: "left", reset: "r"});
+    static #DEFAULT = new Settings({fontSize: 16, theme: "defaultDark", customColor: null, nextSlide: "left", reset: "r"});
 
     static getDefault() {
         return this.#DEFAULT;

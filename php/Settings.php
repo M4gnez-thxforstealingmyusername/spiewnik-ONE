@@ -1,20 +1,18 @@
 <?php
 
-
-
     switch($_SERVER["REQUEST_METHOD"]) {
         case "GET":
-            fetch(2);//$_GET["userId"]);
+            fetch();
             break;
         }
 
-    function fetch($userId): void {
+    function fetch(): void {
             require_once("./conn.php");
 
             $sql = "SELECT * FROM settings where userId = ?";
 
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("s", $userId);
+            $stmt->bind_param("s", $_SESSION["userId"]); //TODO: add server userId
             $stmt->execute();
 
             $result = $stmt->get_result();

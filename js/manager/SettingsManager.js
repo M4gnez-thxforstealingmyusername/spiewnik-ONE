@@ -5,6 +5,7 @@ import { SettingsService } from "../service/SettingsService.js";
 export class SettingsManager{
 
     #settings;
+    static #THEMELIST = ["defaultDark"];
 
     constructor() {
         this.getRemoteSettings().then(() => {this.apply()});
@@ -29,7 +30,11 @@ export class SettingsManager{
     }
 
     apply() {
+        console.info("info:\n\tapplying settings");
+        
         this.setTheme(this.#settings.getTheme())
+        
+        console.info("info:\n\tsettings applied");
     }
 
     async getLocalSettings() {
@@ -46,24 +51,32 @@ export class SettingsManager{
         }
     }
 
+    setLocalSettings() {
+        document.cookie = "settings=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        
+        const expirationDate = new Date();
+        expirationDate.setTime(expirationDate.getTime() + (30*24*60*60*1000));
+        document.cookie = `settings=${this.#settings.serialize()};expires=${expirationDate.toUTCString()};path=/`;
+
+        console.info("info:\n\tlocal settings saved");
+    }
+
     setDefaultLocalSettings() {
         console.info("info:\n\tno settings found, initializing default settings");
 
-        document.cookie = "settings=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        const expirationDate = new Date();
-        expirationDate.setTime(expirationDate.getTime() + (30*24*60*60*1000));
-        document.cookie = `settings=${Settings.getDefault().serialize()};expires=${expirationDate.toUTCString()};path=/`;
+        this.#settings = Settings.getDefault();
+
+        this.setLocalSettings();
     }
 
     setTheme(theme) {
         let themeSheet = document.getElementById("themeSheet");
 
-        //TODO: create theme list and check if present
-        if(true){
+        if(SettingsManager.#THEMELIST.includes(theme)){
             themeSheet.setAttribute("href", `${theme}.css`);
             console.info(`info:\n\ttheme set to: "${theme}"`);
         }
         else
-            console.warn(`warning:\n\ttheme not found`)
+            console.warn(`warning:\n\ttheme "${theme}" not found`)
     }
 }
