@@ -4,7 +4,7 @@
         case "GET":
             fetch();
             break;
-        }
+    }
 
     function fetch(): void {
             require_once("./conn.php");
