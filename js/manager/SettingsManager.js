@@ -5,10 +5,9 @@ import { SettingsService } from "../service/SettingsService.js";
 export class SettingsManager{
 
     #settings;
-    static #THEMELIST = ["defaultDark"];
 
     constructor() {
-        this.getRemoteSettings().then(() => {this.apply()});
+        this.getRemoteSettings();
     }
 
     async getRemoteSettings() {
@@ -29,14 +28,6 @@ export class SettingsManager{
         return 1;
     }
 
-    apply() {
-        console.info("info:\n\tapplying settings");
-        
-        this.setTheme(this.#settings.getTheme())
-        
-        console.info("info:\n\tsettings applied");
-    }
-
     async getLocalSettings() {
         if(this.#settings)
             return;
@@ -53,7 +44,7 @@ export class SettingsManager{
 
     setLocalSettings() {
         document.cookie = "settings=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        
+
         const expirationDate = new Date();
         expirationDate.setTime(expirationDate.getTime() + (30*24*60*60*1000));
         document.cookie = `settings=${this.#settings.serialize()};expires=${expirationDate.toUTCString()};path=/`;
@@ -68,15 +59,5 @@ export class SettingsManager{
 
         this.setLocalSettings();
     }
-
-    setTheme(theme) {
-        let themeSheet = document.getElementById("themeSheet");
-
-        if(SettingsManager.#THEMELIST.includes(theme)){
-            themeSheet.setAttribute("href", `${theme}.css`);
-            console.info(`info:\n\ttheme set to: "${theme}"`);
-        }
-        else
-            console.warn(`warning:\n\ttheme "${theme}" not found`)
-    }
+XS
 }
