@@ -8,8 +8,9 @@ switch($_SERVER["REQUEST_METHOD"]) {
 
 function fetch(): void {
     require_once("./conn.php");
+    session_start();
 
-    $sql = "SELECT * FROM user";
+    $sql = "SELECT * FROM chord";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute();
