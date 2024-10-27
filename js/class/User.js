@@ -7,7 +7,7 @@ export class User{
     #joinDate;
     #username;
     #displayName;
-    #authorizationLever;
+    #authorizationLevel;
 
     getId() {
         return this.#id;
@@ -30,7 +30,7 @@ export class User{
     }
 
     getAuthorizationLevel() {
-        return this.#authorizationLever;
+        return this.#authorizationLevel;
     }
 
     setId(value) {
@@ -50,6 +50,6 @@ export class User{
     }
 
     setAuthorizationLevel(value) {
-        this.#authorizationLever = value;
+        this.#authorizationLevel = value;
     }
 }
